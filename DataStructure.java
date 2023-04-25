@@ -1,11 +1,14 @@
 
 public class DataStructure implements DT {
 
+	private TwoWayLinkedList<Container> xAxis;
+	private TwoWayLinkedList<Container> yAxis;
 
 	//////////////// DON'T DELETE THIS CONSTRUCTOR ////////////////
 	public DataStructure()
 	{
-		//TODO
+		xAxis = new TwoWayLinkedList<Container>();
+		yAxis = new TwoWayLinkedList<Container>();
 	}
 
 	@Override
