@@ -10,6 +10,22 @@ public class DataStructure implements DT {
 		xAxis = new TwoWayLinkedList<Container>();
 		yAxis = new TwoWayLinkedList<Container>();
 	}
+	public DataStructure(TwoWayLinkedList<Container> oneAxis , boolean axis)
+	{
+		if (axis){
+			this.xAxis = oneAxis;
+			this.yAxis = new TwoWayLinkedList<>();
+		}
+		else {
+			this.yAxis = oneAxis;
+			this.xAxis = new TwoWayLinkedList<>();
+		}
+	}
+	public DataStructure(TwoWayLinkedList<Container> xAxis, TwoWayLinkedList<Container> yAxis)
+	{
+		this.xAxis = xAxis;
+		this.yAxis = yAxis;
+	}
 
 	@Override
 	public void addPoint(Point point)
@@ -123,23 +139,63 @@ public class DataStructure implements DT {
 	}
 
 	@Override
-	public Point[] nearestPairInStrip(Container container, double width,
-			Boolean axis)
-	{
-		Point [] nearestPair = new Point [2];
-		Container med = getMedian(axis);
-		return nearestPairInStrip(container,width,axis,nearestPair,med);
-	}
-
-	public Point[] nearestPairInStrip(Container container, double width,
-									  Boolean axis, Point[] nearestPair, Container med)
-	{
-		if(med.getData().getX()-container.getData().getX() > width/2)
+	public Point[] nearestPairInStrip(Container container, double width, Boolean axis) {
+		Point[] nearestPair = new Point[2];
+		boolean headIsTooSmall = true, tailIsTooBig = true;
+		if (axis) {
+			Container head = xAxis.getHead();
+			Container tail = xAxis.getTail();
+			while (headIsTooSmall & tailIsTooBig) {
+				headIsTooSmall = container.getData().getX() - head.getData().getX() > width/2;
+				tailIsTooBig = tail.getData().getX() - container.getData().getX() > width/2;
+				if (headIsTooSmall)
+					head = head.getNextContainer();
+				if (tailIsTooBig)
+					tail = tail.getPrevContainer();
+			}
+			if (!headIsTooSmall){
+				if (head.getNextContainer().getData().getX() - container.getData().getX() < width/2) {
+					nearestPair[0] = head.getData();
+					nearestPair[1] = head.getNextContainer().getData();
+				}
+			}
+			else if (!tailIsTooBig){
+				if (container.getData().getX() - tail.getPrevContainer().getData().getX() < width/2) {
+					nearestPair[0] = tail.getData();
+					nearestPair[1] = tail.getPrevContainer().getData();
+				}
+			}
+		}
+		else {
+			Container head = yAxis.getHead();
+			Container tail = yAxis.getTail();
+			while (headIsTooSmall & tailIsTooBig ) {
+				headIsTooSmall = container.getData().getY() - head.getData().getY() > width/2;
+				tailIsTooBig = tail.getData().getY() - container.getData().getY() > width/2;
+				if (headIsTooSmall)
+					head = head.getNextContainer();
+				if (tailIsTooBig)
+					tail = tail.getPrevContainer();
+			}
+			if (!headIsTooSmall){
+				if (head.getNextContainer().getData().getY() - container.getData().getY() < width/2) {
+					nearestPair[0] = head.getData();
+					nearestPair[1] = head.getNextContainer().getData();
+				}
+			}
+			else if (!tailIsTooBig){
+				if (container.getData().getY() - tail.getPrevContainer().getData().getY() < width/2) {
+					nearestPair[0] = tail.getData();
+					nearestPair[1] = tail.getPrevContainer().getData();
+				}
+			}
+		}
+		return nearestPair;
 	}
 
 	public TwoWayLinkedList<Container> getListInRange(Container first, Container last, boolean axis)
 	{
-		TwoWayLinkedList<Container> result = new TwoWayLinkedList<Container>();
+		TwoWayLinkedList<Container> result = new TwoWayLinkedList<>();
 		while(first != last)
 		{
 			result.addPoint(first,axis);
