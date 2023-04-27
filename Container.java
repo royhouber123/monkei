@@ -29,9 +29,6 @@ public class Container{
 	public void setPrevContainer(Container prevContainer) {
 		this.prevContainer = prevContainer;
 	}
-	public Point getPoint() {
-		return data;
-	}
 	public Container getNextContainer() {
 		return this.nextContainer;
 	}
