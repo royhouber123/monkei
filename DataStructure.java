@@ -143,16 +143,22 @@ public class DataStructure implements DT {
 		Point[] nearestPair = new Point[2];
 		boolean headIsTooSmall = true, tailIsTooBig = true;
 		if (axis) {
+			boolean finishedWithFail = false;
 			Container head = xAxis.getHead();
 			Container tail = xAxis.getTail();
-			while (headIsTooSmall & tailIsTooBig) {
+			while (headIsTooSmall & tailIsTooBig & !finishedWithFail) {
 				headIsTooSmall = container.getData().getX() - head.getData().getX() > width/2;
 				tailIsTooBig = tail.getData().getX() - container.getData().getX() > width/2;
-				if (headIsTooSmall)
-					head = head.getNextContainer();
-				if (tailIsTooBig)
+				if (headIsTooSmall) {
+					if (head.getNextContainer() == tail)
+						finishedWithFail = true;
+					else
+						head = head.getNextContainer();
+				}
+				if (tailIsTooBig & !finishedWithFail)
 					tail = tail.getPrevContainer();
 			}
+			if (finishedWithFail) return nearestPair;
 			if (!headIsTooSmall){
 				if (head.getNextContainer().getData().getX() - container.getData().getX() < width/2) {
 					nearestPair[0] = head.getData();
@@ -167,16 +173,22 @@ public class DataStructure implements DT {
 			}
 		}
 		else {
+			boolean finishedWithFail = false;
 			Container head = yAxis.getHead();
 			Container tail = yAxis.getTail();
-			while (headIsTooSmall & tailIsTooBig ) {
+			while (headIsTooSmall & tailIsTooBig & !finishedWithFail) {
 				headIsTooSmall = container.getData().getY() - head.getData().getY() > width/2;
 				tailIsTooBig = tail.getData().getY() - container.getData().getY() > width/2;
-				if (headIsTooSmall)
-					head = head.getNextContainer();
-				if (tailIsTooBig)
+				if (headIsTooSmall) {
+					if (head.getNextContainer() == tail)
+						finishedWithFail = true;
+					else
+						head = head.getNextContainer();
+				}
+				if (tailIsTooBig & !finishedWithFail)
 					tail = tail.getPrevContainer();
 			}
+			if (finishedWithFail) return nearestPair;
 			if (!headIsTooSmall){
 				if (head.getNextContainer().getData().getY() - container.getData().getY() < width/2) {
 					nearestPair[0] = head.getData();
